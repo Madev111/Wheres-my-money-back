@@ -1,1 +1,1 @@
-export * from './users-money';
+export * from './expenses';
