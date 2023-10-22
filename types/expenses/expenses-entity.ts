@@ -1,5 +1,6 @@
+
 export interface ExpensesEntity {
-    id: string;
+    id?: string;
     name: string;
     date: Date;
     category: string;

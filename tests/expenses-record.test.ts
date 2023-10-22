@@ -1,9 +1,12 @@
 import {ExpensesEntity} from "../types";
 import {ExpensesRecord} from "../records/expenses.record";
+import {pool} from "../utils/db";
 
+afterAll(async ()=> {
+    await pool.end();
+})
 
-const defaultObj = {
-    id: '123',
+const defaultObj: ExpensesEntity = {
     name: 'test',
     date: new Date(),
     category: "testowa",
@@ -25,4 +28,16 @@ test('Validates invalid price', ()=> {
         ...defaultObj,
         price: -3,
     })).toThrow('The expense must have a price from 0 to 999999.')
+});
+
+test('Insert new expense data returns uuid', async()=> {
+
+    const exp = new ExpensesRecord(defaultObj);
+
+    await exp.insert();
+
+    expect(exp.id).toBeDefined();
+    expect(typeof exp.id).toBe('string');
+
+
 });
