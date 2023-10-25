@@ -2,6 +2,7 @@ import {ExpensesEntity} from "../types";
 import {ExpensesRecord} from "../records/expenses.record";
 import {pool} from "../utils/db";
 
+
 afterAll(async ()=> {
     await pool.end();
 })
@@ -12,6 +13,15 @@ const defaultObj: ExpensesEntity = {
     category: "testowa",
     price: 300
 }
+
+test('Expense Record returns correct data from database', async ()=> {
+
+    const expense = await ExpensesRecord.getOne('75b23c80-7386-11ee-a701-24fe9a012734');
+
+    expect(expense.id).toBe('75b23c80-7386-11ee-a701-24fe9a012734');
+    expect(expense.name).toBeDefined();
+    expect(expense.category).toBe('pets');
+})
 
 test('Can build ExpenseRecord', ()=> {
 
@@ -38,6 +48,28 @@ test('Insert new expense data returns uuid', async()=> {
 
     expect(exp.id).toBeDefined();
     expect(typeof exp.id).toBe('string');
+});
 
+test('ExpensesRecord.findAll returns array of found entries.', async()=> {
+
+    const expenses = await ExpensesRecord.findAll();
+
+    expect(expenses).not.toEqual([]);
+    expect(expenses[0].name).toBeDefined();
 
 });
+
+test('ExpensesRecord.findByCategory returns only correct data', async ()=> {
+    const expensesByCategory = await ExpensesRecord.findByCategory('pets');
+
+    expect(expensesByCategory).not.toEqual([]);
+    expect(expensesByCategory[0].price).toBeDefined();
+});
+
+test('ExpensesRecord.findByDate returns expenses between selected dates', async () => {
+    const expensesByDate = await ExpensesRecord.findByDate('2023-10-25', '2023-10-26');
+
+    expect(expensesByDate).not.toEqual([]);
+
+
+})

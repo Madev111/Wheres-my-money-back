@@ -2,8 +2,9 @@ import {ExpensesEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {v4 as uuid} from "uuid"
 import {pool} from "../utils/db";
+import {FieldPacket} from "mysql2";
 
-
+type ExpensesRecordResults = [ExpensesEntity[], FieldPacket[]]
 export class ExpensesRecord implements ExpensesEntity {
     id: string;
     name: string;
@@ -29,6 +30,60 @@ export class ExpensesRecord implements ExpensesEntity {
         this.category = obj.category;
         this.price = obj.price;
     };
+
+    static async getOne(id: string) : Promise<ExpensesRecord | null> {
+
+        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `id` = :id", {
+            id,
+        }) as ExpensesRecordResults;
+
+        return results.length === 0 ? null : new ExpensesRecord(results[0]);
+
+    }
+
+    static async findAll() : Promise<ExpensesEntity[]> {
+        const [results]= await pool.execute("SELECT * FROM `users_expenses` ") as ExpensesRecordResults;
+
+        return results.map(result => {
+            const {
+                name, date, category, price
+            } = result;
+            return {
+                name, date, category, price
+            };
+        });
+    }
+
+    static async findByCategory(category: string): Promise<ExpensesEntity[]> {
+        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `category` LIKE :category", {
+            category,
+        }) as ExpensesRecordResults;
+
+        return results.map(result => {
+            const {
+                name, date, category, price
+            } = result;
+            return {
+                name, date, category, price
+            };
+        });
+    }
+
+    static async findByDate(startDate: string, endDate: string): Promise<ExpensesEntity[]> {
+        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `date` >= :startDate AND `date` <= :endDate ", {
+            startDate,
+            endDate,
+        }) as ExpensesRecordResults;
+
+        return results.map(result => {
+            const {
+                name, date, category, price
+            } = result;
+            return {
+                name, date, category, price
+            };
+        });
+    }
 
     async insert() {
         if(!this.id) {
