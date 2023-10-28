@@ -2,6 +2,8 @@ import express, {json} from 'express';
 import cors from 'cors';
 import 'express-async-errors';
 import rateLimit from "express-rate-limit";
+import {handleError} from "./utils/errors";
+import {ExpensesRouter} from "./routers/expenses.router";
 
 
 
@@ -16,6 +18,10 @@ app.use(rateLimit({
     windowMs: 5 * 60 * 1000,
     max: 100,
 }));
+
+app.use('/expenses', ExpensesRouter);
+
+app.use(handleError);
 
 
 
