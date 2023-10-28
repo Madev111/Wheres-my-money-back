@@ -5,6 +5,7 @@ import rateLimit from "express-rate-limit";
 import {handleError} from "./utils/errors";
 import {ExpensesRouter} from "./routers/expenses.router";
 import {CategoryRouter} from "./routers/category.router";
+import {EarningsRouter} from "./routers/earnings.router";
 
 
 
@@ -22,6 +23,7 @@ app.use(rateLimit({
 
 app.use('/expenses', ExpensesRouter);
 app.use('/categories', CategoryRouter);
+app.use('/earnings', EarningsRouter);
 
 app.use(handleError);
 
