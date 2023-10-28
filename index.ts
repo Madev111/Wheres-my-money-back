@@ -4,6 +4,7 @@ import 'express-async-errors';
 import rateLimit from "express-rate-limit";
 import {handleError} from "./utils/errors";
 import {ExpensesRouter} from "./routers/expenses.router";
+import {CategoryRouter} from "./routers/category.router";
 
 
 
@@ -20,6 +21,7 @@ app.use(rateLimit({
 }));
 
 app.use('/expenses', ExpensesRouter);
+app.use('/categories', CategoryRouter);
 
 app.use(handleError);
 
