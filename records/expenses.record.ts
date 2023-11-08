@@ -44,14 +44,7 @@ export class ExpensesRecord implements ExpensesEntity {
     static async findAll() : Promise<ExpensesEntity[]> {
         const [results]= await pool.execute("SELECT * FROM `users_expenses` ") as ExpensesRecordResults;
 
-        return results.map(result => {
-            const {
-                name, date, category, price
-            } = result;
-            return {
-                name, date, category, price
-            };
-        });
+        return results.map(obj => new ExpensesRecord(obj));
     }
 
     static async findByCategory(category: string): Promise<ExpensesEntity[]> {
@@ -59,14 +52,7 @@ export class ExpensesRecord implements ExpensesEntity {
             category,
         }) as ExpensesRecordResults;
 
-        return results.map(result => {
-            const {
-                name, date, category, price
-            } = result;
-            return {
-                name, date, category, price
-            };
-        });
+        return results.map(obj => new ExpensesRecord(obj));
     }
 
     static async findByDate(startDate: string, endDate: string): Promise<ExpensesEntity[]> {
@@ -75,17 +61,10 @@ export class ExpensesRecord implements ExpensesEntity {
             endDate,
         }) as ExpensesRecordResults;
 
-        return results.map(result => {
-            const {
-                name, date, category, price
-            } = result;
-            return {
-                name, date, category, price
-            };
-        });
+        return results.map(obj => new ExpensesRecord(obj));
     }
 
-    async insert() {
+    async insert() :Promise<string> {
         if(!this.id) {
             this.id = uuid();
         } else {
@@ -93,5 +72,12 @@ export class ExpensesRecord implements ExpensesEntity {
         }
 
         await pool.execute("INSERT INTO `users_expenses`(`id`, `name`, `date`, `category`, `price`) VALUES(:id, :name, :date, :category, :price)", this)
+
+        return this.id
+    }
+    async delete(): Promise<void> {
+        await pool.execute("DELETE FROM `users_expenses` WHERE `id` = :id", {
+            id: this.id,
+        })
     }
 }

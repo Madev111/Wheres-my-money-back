@@ -26,13 +26,14 @@ export class CategoryRecord implements CategoryEntity {
         return results.length === 0 ? null : new CategoryRecord(results[0]);
     }
 
-    static async findAll(): Promise<string[]> {
+    static async findAll(): Promise<CategoryEntity[]> {
         const [results] = await pool.execute("SELECT * FROM `categories`") as CategoryRecordResults;
 
-        return results.map(result => {
-            const {name} = result;
-            return name
-        })
+        // return results.map(result => {
+        //     const {name} = result;
+        //     return name
+        // })
+        return results.map(obj => new CategoryRecord(obj));
     }
 
 }

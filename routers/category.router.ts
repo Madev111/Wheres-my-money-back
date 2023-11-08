@@ -8,7 +8,9 @@ export const  CategoryRouter = Router()
         res.json(category);
     })
     .get('/search', async (req, res)=> {
-        const categories = await CategoryRecord.findAll();
+        const categoriesList = await CategoryRecord.findAll();
 
-        res.json(categories);
+        res.json({
+            categoriesList,
+        });
     });

@@ -1,6 +1,7 @@
 export interface EarningsEntity {
-    id?: number;
+    id?: string;
     value: number;
     date: Date;
     source: string;
+
 }

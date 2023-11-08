@@ -1,27 +1,52 @@
 import {Router} from "express";
 import {ExpensesRecord} from "../records/expenses.record";
+import {ValidationError} from "../utils/errors";
 
 export const ExpensesRouter = Router()
+    .get('/:expenseId', async (req, res) => {
+        const expense = await ExpensesRecord.getOne(req.params.expenseId);
 
-    .get('/search', async (req, res)=> {
-        const expenses = await ExpensesRecord.findAll();
+        res.json( {
+            expense
+        });
+    })
 
-        res.json(expenses);
+    .get('/', async (req, res)=> {
+        const expensesList = await ExpensesRecord.findAll();
+
+        res.json({
+            expensesList,
+        });
     })
     .get('/search/:category', async (req, res)=> {
-        const expenses = await ExpensesRecord.findByCategory(req.params.category);
+        const expensesList = await ExpensesRecord.findByCategory(req.params.category);
 
-        res.json(expenses);
+        res.json({
+            expensesList,
+        });
 
     })
     .get('/search/:startDate/:endDate', async (req, res)=> {
-        const expenses = await ExpensesRecord.findByDate(req.params.startDate, req.params.endDate);
+        const expensesList = await ExpensesRecord.findByDate(req.params.startDate, req.params.endDate);
 
-        res.json(expenses);
+        res.json({
+            expensesList,
+        });
 
     })
     .post('/', async (req, res)=> {
         const expense = new ExpensesRecord(req.body);
         await expense.insert();
         res.json(expense);
+    })
+    .delete('/:id', async(req, res)=> {
+        const expense = await ExpensesRecord.getOne(req.params.id)
+
+        if(!expense) {
+            throw new ValidationError('This earning does not exist.')
+        }
+
+        await expense.delete()
+
+        res.end();
     })
