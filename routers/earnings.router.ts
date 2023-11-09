@@ -9,30 +9,30 @@ export const EarningsRouter = Router()
 
         res.json(earning);
     })
-    .get('/', async (req, res)=> {
+    .get('/', async (req, res) => {
         const earningsList = await EarningsRecord.findAll();
 
         res.json({
             earningsList,
         });
     })
-    .get('/search/:startDate/:endDate', async (req, res)=> {
+    .get('/search/:startDate/:endDate', async (req, res) => {
         const earningsList = await EarningsRecord.findByDate(req.params.startDate, req.params.endDate);
 
         res.json({
             earningsList,
         });
     })
-    .post('/', async (req, res)=> {
+    .post('/', async (req, res) => {
         const earning = new EarningsRecord(req.body);
         await earning.insert();
         res.json(earning);
     })
-    .delete('/:id', async (req, res)=> {
+    .delete('/:id', async (req, res) => {
 
         const earning = await EarningsRecord.getOne(req.params.id)
 
-        if(!earning) {
+        if (!earning) {
             throw new ValidationError('This earning does not exist.')
         }
 
