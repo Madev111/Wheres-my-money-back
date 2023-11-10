@@ -42,13 +42,13 @@ export class ExpensesRecord implements ExpensesEntity {
     }
 
     static async findAll() : Promise<ExpensesEntity[]> {
-        const [results]= await pool.execute("SELECT * FROM `users_expenses` ") as ExpensesRecordResults;
+        const [results]= await pool.execute("SELECT * FROM `users_expenses` ORDER BY `date` DESC ") as ExpensesRecordResults;
 
         return results.map(obj => new ExpensesRecord(obj));
     }
 
     static async findByCategory(category: string): Promise<ExpensesEntity[]> {
-        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `category` LIKE :category", {
+        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `category` LIKE :category ORDER BY `date` DESC", {
             category,
         }) as ExpensesRecordResults;
 
@@ -56,7 +56,7 @@ export class ExpensesRecord implements ExpensesEntity {
     }
 
     static async findByDate(startDate: string, endDate: string): Promise<ExpensesEntity[]> {
-        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `date` >= :startDate AND `date` <= :endDate ", {
+        const [results] = await pool.execute("SELECT * FROM `users_expenses` WHERE `date` >= :startDate AND `date` <= :endDate ORDER BY `date` DESC", {
             startDate,
             endDate,
         }) as ExpensesRecordResults;
