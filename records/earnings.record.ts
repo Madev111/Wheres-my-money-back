@@ -38,7 +38,7 @@ export class EarningsRecord implements EarningsEntity {
     }
 
     static async findAll(): Promise<EarningsEntity[]> {
-        const [results] = await pool.execute("SELECT * FROM `users_earnings`") as EarningsRecordResults;
+        const [results] = await pool.execute("SELECT * FROM `users_earnings` ORDER BY `date` DESC") as EarningsRecordResults;
 
         return results.map(result => {
             const {
@@ -51,7 +51,7 @@ export class EarningsRecord implements EarningsEntity {
     }
 
     static async findByDate(startDate: string, endDate: string): Promise<EarningsEntity[]> {
-        const [results] = await pool.execute("SELECT * FROM `users_earnings` WHERE `date` >= :startDate AND `date` <= :endDate ", {
+        const [results] = await pool.execute("SELECT * FROM `users_earnings` WHERE `date` >= :startDate AND `date` <= :endDate ORDER BY `date` DESC", {
             startDate,
             endDate,
         }) as EarningsRecordResults;
