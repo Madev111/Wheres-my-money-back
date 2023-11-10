@@ -48,6 +48,12 @@ npm install
 npm run start
 ```
 
+## Database
+
+
+To install db locally, I attached sql file in ./utils, just import it via e.g. phpmyadmin.
+
+
 ## Run tests
 
 ```sh
